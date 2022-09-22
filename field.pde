@@ -1,12 +1,9 @@
 /**
- * Field -- single instance class
- * Handles Obstacle instances
- * Displays background/texture elements
+ * The GameField class is 
  */
- 
-class Field{
+class GameField{
   public FieldState state;
-  private ArrayList<ObstacleSpawner> obstacle_spawners;
+  private ArrayList<ObstacleSpawner> obstacleSpawners;
   private ObstacleSpawner CACTUS_SPAWNER;
   private ObstacleSpawner TUMBLEWEED_SPAWNER;
   private ObstacleSpawner CLOUD_SPAWNER;
@@ -14,15 +11,15 @@ class Field{
   ArrayList<Obstacle> obstacles;
   final float GROUND_HEIGHT;
   float offset;
-  PImage cactus_day, cactus_night,
-         tumbleweed_day, tumbleweed_night,
-         cloud_day, cloud_night;
+  PImage cactusDay, cactusNight,
+         tumbleweedDay, tumbleweedNight,
+         cloudDay, cloudNight;
   PImage sun, moon;
   
   int t1, t2;
   float v1, v2a, v2b;
   
-  Field(){
+  GameField(){
     this.obstacles = new ArrayList<Obstacle>();
     this.GROUND_HEIGHT = height/5;
     offset = 0;
@@ -43,29 +40,29 @@ class Field{
   void update(){
     switch(state){
       case DAY:
-        if(frameCount % 46 == 0 || frameCount % 82 == 0) spawn_random_obstacle();
-        update_obstacles();
+        if(frameCount % 46 == 0 || frameCount % 82 == 0) spawnRandomObstacle();
+        updateObstacles();
         break;
       case NIGHT:
         // don't update
         break;
       default:
-        error_message("Field -> update() -> switch(state)");
+        errorMessage("Field -> update() -> switch(state)");
         break;
     }
   }
   
-  void update_obstacles(){
+  void updateObstacles(){
     for(int i = obstacles.size()-1; i >= 0; i--){
       obstacles.get(i).move(v1);
       if(obstacles.get(i).x < -obstacles.get(i).w/2) obstacles.remove(i);
     }
   }
   
-  void spawn_random_obstacle(){
+  void spawnRandomObstacle(){
     int type = 3-floor(sqrt(random(14)+1));
-    Obstacle next_obstacle = obstacle_spawners.get(type).spawn();
-    obstacles.add(next_obstacle);
+    Obstacle nextObstacle = obstacleSpawners.get(type).spawn();
+    obstacles.add(nextObstacle);
   }
   
   void display(){
@@ -85,7 +82,7 @@ class Field{
         image(moon, width/5, width/10, UNIT, UNIT);
         break;
       default:
-        error_message("Field -> display() -> switch(state)");
+        errorMessage("Field -> display() -> switch(state)");
         break;
     }
     for(Obstacle o: obstacles){
@@ -105,21 +102,21 @@ class Field{
     }
     vertex(width,height);
     endShape(CLOSE);
-    if(GAME.is_on()) offset += v2a;
+    if(GAME.isOn()) offset += v2a;
     
     rect(width/2, height-GROUND_HEIGHT/2, width, GROUND_HEIGHT*1.4);
   }
   
-  void load_costumes(){
+  void loadCostumes(){
     try{
-      this.cactus_day = loadImage("cactus_big.png");
-      this.cactus_night = loadImage("cactus_big_night.png");
+      this.cactusDay = loadImage("cactusBig.png");
+      this.cactusNight = loadImage("cactusBigNight.png");
     
-      this.tumbleweed_day = loadImage("tumbleweed.png");
-      this.tumbleweed_night = loadImage("tumbleweed.png");
+      this.tumbleweedDay = loadImage("tumbleweed.png");
+      this.tumbleweedNight = loadImage("tumbleweed.png");
     
-      this.cloud_day = loadImage("cloud_big.png");
-      this.cloud_night = loadImage("cloud_big_night.png");
+      this.cloudDay = loadImage("cloudBig.png");
+      this.cloudNight = loadImage("cloudBigNight.png");
     
       this.sun = loadImage("sun.png");
       this.moon = loadImage("moon.png");
@@ -129,15 +126,15 @@ class Field{
     }
   }
   
-  void initialize_spawners(){
-    CACTUS_SPAWNER = new ObstacleSpawner(new Cactus(UNIT, cactus_day, cactus_night));
-    TUMBLEWEED_SPAWNER = new ObstacleSpawner(new Tumbleweed(UNIT, tumbleweed_day, tumbleweed_night));
-    CLOUD_SPAWNER = new ObstacleSpawner(new Cloud(UNIT, cloud_day, cloud_night));
+  void initializeSpawners(){
+    CACTUS_SPAWNER = new ObstacleSpawner(new Cactus(UNIT, cactusDay, cactusNight));
+    TUMBLEWEED_SPAWNER = new ObstacleSpawner(new Tumbleweed(UNIT, tumbleweedDay, tumbleweedNight));
+    CLOUD_SPAWNER = new ObstacleSpawner(new Cloud(UNIT, cloudDay, cloudNight));
     
-    obstacle_spawners = new ArrayList<ObstacleSpawner>();
-    obstacle_spawners.add(CACTUS_SPAWNER);
-    obstacle_spawners.add(TUMBLEWEED_SPAWNER);
-    obstacle_spawners.add(CLOUD_SPAWNER);
+    obstacleSpawners = new ArrayList<ObstacleSpawner>();
+    obstacleSpawners.add(CACTUS_SPAWNER);
+    obstacleSpawners.add(TUMBLEWEED_SPAWNER);
+    obstacleSpawners.add(CLOUD_SPAWNER);
   }
   
   void reset(){

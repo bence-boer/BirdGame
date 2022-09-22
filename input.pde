@@ -1,16 +1,16 @@
 void touchStarted(){
   Input.updateValues(touches[touches.length-1].x, touches[touches.length-1].y, currentInput);
   
-  if(GAME.is_on()) currentInput = Input.x < width/2 ? Input.DOWN_PRESSED : Input.UP_PRESSED;
+  if(GAME.isOn()) currentInput = Input.x < width/2 ? Input.DOWN_PRESSED : Input.UP_PRESSED;
   else currentInput = Input.PRESSED;
-  app_state.handle_input(currentInput);
+  appState.handleInput(currentInput);
 }
 
 void touchMoved(){
-  if(!GAME.is_on()){
+  if(!GAME.isOn()){
     currentInput = Input.MOVED;
     Input.updateValues(touches[touches.length-1].x, touches[touches.length-1].y, currentInput);
-    app_state.handle_input(currentInput);
+    appState.handleInput(currentInput);
   }
 }
 
@@ -18,20 +18,20 @@ void touchEnded(){
   if(touches.length == 0){
     // ITT A HIBA: updateValues input típus átállítás előtt
     // következmény: 0-ra default-ol
-    if(GAME.is_on()) currentInput = currentInput == Input.UP_PRESSED ? Input.UP_RELEASED : Input.DOWN_RELEASED;
+    if(GAME.isOn()) currentInput = currentInput == Input.UP_PRESSED ? Input.UP_RELEASED : Input.DOWN_RELEASED;
     else currentInput = Input.RELEASED;
     Input.updateValues(mouseX, mouseY, currentInput);
     
-    app_state.handle_input(currentInput);
+    appState.handleInput(currentInput);
     currentInput = Input.NULL;
   }
   else {
     Input.updateValues(touches[touches.length-1].x, touches[touches.length-1].y, currentInput);
     
-    if(GAME.is_on()) currentInput = Input.x < width/2 ? Input.DOWN_RELEASED : Input.UP_RELEASED;
+    if(GAME.isOn()) currentInput = Input.x < width/2 ? Input.DOWN_RELEASED : Input.UP_RELEASED;
     else currentInput = Input.RELEASED;
     
-    app_state.handle_input(currentInput);
+    appState.handleInput(currentInput);
   }
 }
 
@@ -46,25 +46,25 @@ static enum Input{
   RELEASED;
   
   public static float x, y;
-  public static float delta_x, delta_y;
-  public static void updateValues(float x_in, float y_in, Input input){
+  public static float deltaX, deltaY;
+  public static void updateValues(float xIn, float yIn, Input input){
     switch(input){
       case MOVED:
-        delta_x = x_in - x;
-        delta_y = y_in - y;
-        //println("moved - x: "+delta_x+"; y: "+delta_y);
+        deltaX = xIn - x;
+        deltaY = yIn - y;
+        //println("moved - x: "+deltaX+"; y: "+deltaY);
         break;
       case RELEASED:
-        delta_x = x_in - x;
-        delta_y = y_in - y;
-        //println("released - x: "+delta_x+"; y: "+delta_y);
+        deltaX = xIn - x;
+        deltaY = yIn - y;
+        //println("released - x: "+deltaX+"; y: "+deltaY);
         break;
       default:
-        delta_x = 0;
-        delta_y = 0;
+        deltaX = 0;
+        deltaY = 0;
     }
     
-    x = x_in;
-    y = y_in;
+    x = xIn;
+    y = yIn;
   }
 }

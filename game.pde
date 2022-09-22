@@ -1,15 +1,26 @@
-class GameState implements AppState{
+/**
+ * The GameState class is the implementation of the AppState interface
+ * responsible for updating and rendering the game world
+ * and handling inputs during the game.
+ * It stores the player and the player's current in-game score.
+ * Created based on the 'state' design pattern.
+ *
+ * @author  Bence Boér
+ * @version 1.0
+ * @since   2022-09-01 
+ */
+public class GameState implements AppState{
   Player player;
   Score score;
   
   GameState(){
     initializePlayerStates();
     player = new Player();
-    player.load_costumes();
+    player.loadCostumes();
   }
   
-  public void handle_input(Input input){
-    player.handle_input(input);
+  public void handleInput(Input input){
+    player.handleInput(input);
   }
   
   private void reset(){
@@ -23,7 +34,7 @@ class GameState implements AppState{
   public void enter(Score score){
     this.score = score;
     this.reset();
-    app_state = this;
+    appState = this;
     field.state = FieldState.DAY;
   }
   
@@ -48,8 +59,8 @@ class GameState implements AppState{
     score.display();
   }
   
-  public boolean is_on(){
-    return app_state == this;
+  public boolean isOn(){
+    return appState == this;
   }
   
   void initializePlayerStates(){

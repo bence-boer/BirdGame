@@ -1,20 +1,20 @@
 abstract class Obstacle extends Entity{
-  PImage skin_day, skin_night;
+  PImage skinDay, skinNight;
   
-  protected Obstacle(float w, float h, float x, float y, float vx, float vy, PImage skin_day, PImage skin_night){
+  protected Obstacle(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
     this.w = w;
     this.h = h;
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
-    this.skin_day = skin_day;
-    this.skin_night = skin_night;
+    this.skinDay = skinDay;
+    this.skinNight = skinNight;
   }
-  Obstacle(float w, float h, PImage skin_day, PImage skin_night){
+  Obstacle(float w, float h, PImage skinDay, PImage skinNight){
     this(w,h);
-    this.skin_day = skin_day;
-    this.skin_night = skin_night;
+    this.skinDay = skinDay;
+    this.skinNight = skinNight;
   }
   Obstacle(float w, float h){
     this.w = w;
@@ -28,13 +28,13 @@ abstract class Obstacle extends Entity{
   }
   
   void display(FieldState state){
-    if(skin_day != null){
+    if(skinDay != null){
       switch(state){
         case DAY:
-          image(skin_day, x, y, w, h);
+          image(skinDay, x, y, w, h);
           break;
         case NIGHT:
-          image(skin_night, x, y, w, h);
+          image(skinNight, x, y, w, h);
           break;
       }
     }
@@ -71,11 +71,11 @@ abstract class Obstacle extends Entity{
 }
 
 class Cactus extends Obstacle{
-  Cactus(float UNIT, PImage skin_day, PImage skin_night){
-    super(UNIT*0.75, UNIT*1.5, skin_day, skin_night);
+  Cactus(float UNIT, PImage skinDay, PImage skinNight){
+    super(UNIT*0.75, UNIT*1.5, skinDay, skinNight);
   }
-  private Cactus(float w, float h, float x, float y, float vx, float vy, PImage skin_day, PImage skin_night){
-    super(w, h, x, y, vx, vy, skin_day, skin_night);
+  private Cactus(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
+    super(w, h, x, y, vx, vy, skinDay, skinNight);
   }
   
   boolean collidesWith(Player p){
@@ -88,7 +88,7 @@ class Cactus extends Obstacle{
   }
   
   Cactus clone(){
-    return new Cactus(w, h, x, y, vx, vy, skin_day, skin_night);
+    return new Cactus(w, h, x, y, vx, vy, skinDay, skinNight);
   }
 }
 
@@ -96,14 +96,14 @@ class Tumbleweed extends Obstacle{
   float baseY;
   int rotationPhase;
    
-  Tumbleweed(float UNIT, PImage skin_day, PImage skin_night){
-    super(UNIT/2, UNIT/2, skin_day, skin_night);
+  Tumbleweed(float UNIT, PImage skinDay, PImage skinNight){
+    super(UNIT/2, UNIT/2, skinDay, skinNight);
     baseY = y;
     vx = UNIT/20;
     rotationPhase = 0;
   }
-  private Tumbleweed(float w, float h, float x, float y, float vx, float vy, PImage skin_day, PImage skin_night){
-    super(w, h, x, y, vx, vy, skin_day, skin_night);
+  private Tumbleweed(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
+    super(w, h, x, y, vx, vy, skinDay, skinNight);
     this.baseY = y;
   }
   
@@ -121,10 +121,10 @@ class Tumbleweed extends Obstacle{
     rotate(rotationPhase*HALF_PI/4);
     switch(state){
       case DAY:
-        image(skin_day, 0, 0, w, h);
+        image(skinDay, 0, 0, w, h);
         break;
       case NIGHT:
-        image(skin_night, 0, 0, w, h);
+        image(skinNight, 0, 0, w, h);
         break;
     }
     popMatrix();
@@ -135,18 +135,18 @@ class Tumbleweed extends Obstacle{
   }
   
   Tumbleweed clone(){
-    return new Tumbleweed(w, h, x, y, vx, vy, skin_day, skin_night);
+    return new Tumbleweed(w, h, x, y, vx, vy, skinDay, skinNight);
   }
 }
 
 class Cloud extends Obstacle{
-  Cloud(float UNIT, PImage skin_day, PImage skin_night){
-    super(UNIT*1.5, UNIT*0.75, skin_day, skin_night);
+  Cloud(float UNIT, PImage skinDay, PImage skinNight){
+    super(UNIT*1.5, UNIT*0.75, skinDay, skinNight);
     y -= UNIT*3/4;
     vx = UNIT / 40;
   }
-  private Cloud(float w, float h, float x, float y, float vx, float vy, PImage skin_day, PImage skin_night){
-    super(w, h, x, y, vx, vy, skin_day, skin_night);
+  private Cloud(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
+    super(w, h, x, y, vx, vy, skinDay, skinNight);
   }
   
   void move(float vel){
@@ -160,6 +160,6 @@ class Cloud extends Obstacle{
   }
   
   Cloud clone(){
-    return new Cloud(w, h, x, y, vx, vy, skin_day, skin_night);
+    return new Cloud(w, h, x, y, vx, vy, skinDay, skinNight);
   }
 }

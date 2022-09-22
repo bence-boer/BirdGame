@@ -1,4 +1,4 @@
-class HomeScreen implements AppState{
+public class HomeScreen implements AppState{
   private StartButton button;
   private int countdown;
   private Score score;
@@ -14,7 +14,7 @@ class HomeScreen implements AppState{
   public void enter(Score score){
     this.score = score;
     this.reset();
-    app_state = this;
+    appState = this;
     field.state = FieldState.NIGHT;
   }
   
@@ -43,25 +43,25 @@ class HomeScreen implements AppState{
     score.display();
   }
   
-  public void handle_input(Input input){
+  public void handleInput(Input input){
     switch(input){
       case PRESSED:
-        button.update_state(Input.x,Input.y);
+        button.updateState(Input.x,Input.y);
         break;
       case MOVED:
-        button.update_state(Input.x,Input.y);
+        button.updateState(Input.x,Input.y);
         break;
       case RELEASED:
-        if(button.is_pressed){
-          button.update_state(Input.x,Input.y);
-          if(button.is_pressed){
+        if(button.isPressed){
+          button.updateState(Input.x,Input.y);
+          if(button.isPressed){
             countdown = 2;
-            button.is_pressed = false;
+            button.isPressed = false;
           }
         }
         break;
       default:
-        error_message("HomeScreen -> handle_input");
+        errorMessage("HomeScreen -> handleInput");
         break;
     }
   }

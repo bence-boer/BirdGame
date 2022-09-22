@@ -1,56 +1,77 @@
+/**
+ * The Button class is responsible for defining the structure of a generic unstyled button.
+ * A button's press state can be retrieved by calling the isPressed() method.
+ *
+ * @author  Bence Boér
+ * @version 1.0
+ * @since   2022-09-01 
+ */
+public class Button{
+  protected final float RADIUS_WHEN_PRESSED, RADIUS_ORIGINAL;
+
+  protected float radius;
+  protected float xCoord, yCoord;
+  
+  private boolean isPressed;
+  
+  Button(float xCoordIn, float yCoordIn, float radiusIn){
+    this.xCoord = xCoordIn;
+    this.yCoord = yCoordIn;
+    this.radius = radiusIn;
+    this.radiusOriginal = radiusIn;
+    this.radiusWhenPressed = radiusIn*0.8;
+  }
+  Button(float x, float y){
+    this(xCoord, yCoord, UNIT);
+  }
+  
+  public boolean isPressed(){
+    return isPressed;
+  }
+
+  public void updateState(float xCoordIn, float yCoordIn){
+    this.isPressed = sqrt(sq(this.xCoord - xCoordIn) + sq(this.yCoord - yCoordIn)) <= radius;
+  }
+  
+  public void display(){
+    if(isPressed) this.radius = lerp(this.radius, radiusWhenPressed, 0.2);
+    else this.radius = lerp(this.radius, radiusOriginal, 0.2);
+    
+    pushMatrix();
+    translate(this.xCoord, this.yCoord);
+    stroke(100);
+    strokeWeight(10);
+    line(-this.radius/4, -this.radius/2, this.radius/4, 0);
+    line(-this.radius/4, this.radius/2, this.radius/4, 0);
+    noStroke();
+    popMatrix();
+  }
+}
+
+/**
+ * The StartButton class is a subclass of the Button class.
+ * It's responsible for defining the structure of a start button.
+ *
+ * @author  Bence Boér
+ * @version 1.0
+ * @since   2022-09-01 
+ */
 class StartButton extends Button{
-  PImage skin;
+  private PImage skin;
   
   StartButton(){
     super(width/2, height/2, UNIT*1.5);
   }
   
-  void loadCostume(){
-    skin = loadImage("play_button.png");
+  public void loadCostume(){
+    this.skin = loadImage("play_button.png");
   }
   
   @Override
   public void display(){
-    if(is_pressed) r = lerp(r, r_pressed, 0.4);
-    else r = lerp(r, r_original, 0.4);
+    if(this.isPressed()) this.radius = lerp(this.radius, this.radiusWhenPressed, 0.4);
+    else this.radius = lerp(this.radius, this.radiusOriginal, 0.4);
     
-    
-    image(skin, x, y, r, r);
-  }
-}
-
-class Button{
-  protected float x, y;
-  protected float r, r_pressed, r_original;
-  
-  public boolean is_pressed;
-  
-  Button(float x, float y, float r){
-    this.x = x;
-    this.y = y;
-    this.r = r;
-    this.r_original = r;
-    this.r_pressed = r*0.8;
-  }
-  Button(float x, float y){
-    this(x, y, UNIT);
-  }
-  
-  public void update_state(float x_in, float y_in){
-    is_pressed = sqrt(sq(x - x_in) + sq(y - y_in)) <= r;
-  }
-  
-  public void display(){
-    if(is_pressed) r = lerp(r, r_pressed, 0.2);
-    else r = lerp(r, r_original, 0.2);
-    
-    pushMatrix();
-    translate(x,y);
-    stroke(100);
-    strokeWeight(10);
-    line(-r/4, -r/2, r/4, 0);
-    line(-r/4, r/2, r/4, 0);
-    noStroke();
-    popMatrix();
+    image(this.skin, this.xCoord, this.yCoord, this.radius, this.radius);
   }
 }

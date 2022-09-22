@@ -2,8 +2,8 @@ public GameState GAME;
 public HomeScreen HOMESCREEN;
 public Scoreboard SCOREBOARD;
 
-public AppState app_state;
-public Field field;
+public AppState appState;
+public GameField gameField;
 public AppStateTransitioner transitioner;
 
 private Input currentInput;
@@ -21,8 +21,8 @@ void setup(){
   textAlign(RIGHT,CENTER);
   colorMode(HSB,100);
   
-  /*f = createFont("arcadeclassic.ttf",72);
-  textFont(f);*/
+  font = createFont("arcadeclassic.ttf",72);
+  textFont(font);
   textSize(60);
   noStroke();
   
@@ -32,23 +32,23 @@ void setup(){
   HOMESCREEN = new HomeScreen();
   SCOREBOARD = new Scoreboard();
   
-  app_state = HOMESCREEN;
+  appState = HOMESCREEN;
   currentInput = Input.NULL;
   
-  field = new Field();
-  field.load_costumes();
-  field.initialize_spawners();
+  gameField = new GameField();
+  gameField.loadCostumes();
+  gameField.initializeSpawners();
   
   transitioner = new AppStateTransitioner();
 }
 
 void draw(){
   if(!transitioner.active){
-    app_state.update();
-    app_state.display();
+    appState.update();
+    appState.display();
   }
   if(transitioner.active){
-    app_state.display();
+    appState.display();
     
     transitioner.update();
     transitioner.display();
@@ -56,13 +56,13 @@ void draw(){
 }
 
 interface AppState{
-  public void handle_input(Input input);
+  public void handleInput(Input input);
   public void update();
   public void display();
   public void enter(Score score);
   public void exit();
 }
 
-void error_message(String origin){
+void errorMessage(String origin){
   println("Something's wroooong here:\n"+origin);
 }

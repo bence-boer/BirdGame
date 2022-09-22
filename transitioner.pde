@@ -1,22 +1,22 @@
 class AppStateTransitioner{
-  private PImage captured_frame;
-  private float transition_length;
+  private PImage capturedFrame;
+  private float transitionLength;
   private int startpoint, endpoint;
   public boolean active;
   
   AppStateTransitioner(){
-    captured_frame = createImage(width, height, RGB);
+    capturedFrame = createImage(width, height, RGB);
     active = false;
   }
   
-  public void capture(AppState state_to_capture){
-    state_to_capture.display();
+  public void capture(AppState stateToCapture){
+    stateToCapture.display();
     
-    captured_frame.loadPixels();
+    capturedFrame.loadPixels();
     loadPixels();
     
-    captured_frame.pixels = pixels;
-    captured_frame.updatePixels();
+    capturedFrame.pixels = pixels;
+    capturedFrame.updatePixels();
   }
   
   public void update(){
@@ -26,18 +26,18 @@ class AppStateTransitioner{
   public void display(){
     pushStyle();
     imageMode(CORNER);
-    tint(100, (endpoint-millis())/transition_length*0.1);
-    image(captured_frame, 0, 0, width, height);
+    tint(100, (endpoint-millis())/transitionLength*0.1);
+    image(capturedFrame, 0, 0, width, height);
     popStyle();
   }
   
-  public void transition(float transition_length){
-    transition(transition_length, 0);
+  public void transition(float transitionLength){
+    transition(transitionLength, 0);
   }
-  public void transition(float transition_length, float delay){
-    this.transition_length = transition_length;
+  public void transition(float transitionLength, float delay){
+    this.transitionLength = transitionLength;
     startpoint = millis() + (int)(delay*1000);
-    endpoint = startpoint + (int)(transition_length*1000);
+    endpoint = startpoint + (int)(transitionLength*1000);
     active = true;
   }
 }

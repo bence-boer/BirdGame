@@ -8,8 +8,8 @@ public static PlayerState DUCKING_STATE;
 class Player extends Entity{
   private PlayerState state;
  
-  private PImage[] running_sprite;
-  private PImage[] ducking_sprite;
+  private PImage[] runningSprite;
+  private PImage[] duckingSprite;
   private PImage[] costumes;
   private int step;
   
@@ -32,7 +32,7 @@ class Player extends Entity{
   void update(){
     state.update(this);
     move();
-    cycle_costume();
+    cycleCostume();
     checkForCollision();
   }
   
@@ -48,12 +48,12 @@ class Player extends Entity{
     y += vy;
   }
   
-  void cycle_costume(){
+  void cycleCostume(){
     if(frameCount % 5 == 0) step = 1-step;
   }
   
-  void handle_input(Input input){
-    state.handle_input(this, input);
+  void handleInput(Input input){
+    state.handleInput(this, input);
   } 
   
   void die(){
@@ -73,16 +73,16 @@ class Player extends Entity{
     image(costumes[step], x, y, w, h);
   }
   
-  void load_costumes(){
-    running_sprite = new PImage[2];
-    ducking_sprite = new PImage[2];
+  void loadCostumes(){
+    runningSprite = new PImage[2];
+    duckingSprite = new PImage[2];
     
-    running_sprite[0] = loadImage("bird_running_1.png");
-    running_sprite[1] = loadImage("bird_running_2.png");
-    ducking_sprite[0] = loadImage("bird_dodging_1.png");
-    ducking_sprite[1] = loadImage("bird_dodging_2.png");
+    runningSprite[0] = loadImage("birdRunning_1.png");
+    runningSprite[1] = loadImage("birdRunning_2.png");
+    duckingSprite[0] = loadImage("birdDodging_1.png");
+    duckingSprite[1] = loadImage("birdDodging_2.png");
     
-    costumes = running_sprite;
+    costumes = runningSprite;
   }
   
   void reset(){
@@ -99,7 +99,7 @@ class Player extends Entity{
 }
 
 interface PlayerState{
-  void handle_input(Player character, Input input); 
+  void handleInput(Player character, Input input); 
   void enter(Player character);
   void update(Player character);
 }
@@ -113,10 +113,10 @@ class RunningState implements PlayerState{
     character.vy = 0;
     character.reposition();
       
-    character.costumes = character.running_sprite;
+    character.costumes = character.runningSprite;
   }
   
-  void handle_input(Player character, Input input){
+  void handleInput(Player character, Input input){
     switch(input){
       case UP_PRESSED:
         character.state = JUMPING_STATE;
@@ -139,22 +139,22 @@ class RunningState implements PlayerState{
   
 class JumpingState implements PlayerState{
   private final float gravity;
-  private final float jumping_velocity;
+  private final float jumpingVelocity;
   
   JumpingState(){
     gravity = height/200;
-    jumping_velocity = -width/30;
+    jumpingVelocity = -width/30;
   }
     
   void enter(Player character){
-    character.vy = jumping_velocity;
+    character.vy = jumpingVelocity;
     character.w = UNIT*2/3;
     character.h = UNIT;
     
-    character.costumes = character.running_sprite;
+    character.costumes = character.runningSprite;
   }
   
-  void handle_input(Player character, Input input){
+  void handleInput(Player character, Input input){
     switch(input){
       case UP_PRESSED:
         character.state = SLOW_FALL_STATE;
@@ -199,10 +199,10 @@ class FallingState implements PlayerState{
     character.w = UNIT*2/3;
     character.h = UNIT;
     
-    character.costumes = character.running_sprite;
+    character.costumes = character.runningSprite;
   }
   
-  void handle_input(Player character, Input input){
+  void handleInput(Player character, Input input){
     switch(input){
       case UP_PRESSED:
         character.state = SLOW_FALL_STATE;
@@ -228,20 +228,20 @@ class FallingState implements PlayerState{
 }
   
 class SlowFallState implements PlayerState{
-  private final float falling_speed;
+  private final float fallingSpeed;
 
   SlowFallState(){
-    falling_speed = height/80;
+    fallingSpeed = height/80;
   }
   
   void enter(Player character){
     character.w = UNIT;
     character.h = UNIT/2;
     
-    character.costumes = character.ducking_sprite;
+    character.costumes = character.duckingSprite;
   }
   
-  void handle_input(Player character, Input input){
+  void handleInput(Player character, Input input){
     switch(input){
       case UP_RELEASED:
         character.state = FALLING_STATE;
@@ -257,7 +257,7 @@ class SlowFallState implements PlayerState{
   }
     
   void update(Player character){
-    character.vy = falling_speed;
+    character.vy = fallingSpeed;
       
     if(character.hasLanded()){
       character.state = RUNNING_STATE;
@@ -277,10 +277,10 @@ class FastFallState implements PlayerState{
     character.w = UNIT;
     character.h = UNIT/2;
     
-    character.costumes = character.ducking_sprite;
+    character.costumes = character.duckingSprite;
   }
   
-  void handle_input(Player character, Input input){
+  void handleInput(Player character, Input input){
     switch(input){
       case UP_PRESSED:
         character.state = SLOW_FALL_STATE;
@@ -312,10 +312,10 @@ class DuckingState implements PlayerState{
     
     character.reposition();
     
-    character.costumes = character.ducking_sprite;
+    character.costumes = character.duckingSprite;
   }
     
-  void handle_input(Player character, Input input){
+  void handleInput(Player character, Input input){
     switch(input){
       case UP_PRESSED:
         character.state = JUMPING_STATE;

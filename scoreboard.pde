@@ -3,21 +3,21 @@ class Scoreboard implements AppState{
   private short length;
   
   public short highscore;
-  private short highscore_id;
+  private short highscoreId;
   
-  private Score latest_score;
+  private Score latestScore;
   
   private final Button button;
-  private float scroll_position;
-  private float total_height;
+  private float scrollPosition;
+  private float totalHeight;
   
-  private float scroll_velocity;
+  private float scrollVelocity;
   private final float DRAG = 0.95;
   
   Scoreboard(){
     scores = new short[10000];
     length = -1;
-    highscore_id = 0;
+    highscoreId = 0;
     button = new Button(width-UNIT*1.25, UNIT/2, UNIT/3);
     
     //loadSavedData();
@@ -31,82 +31,82 @@ class Scoreboard implements AppState{
     }
   }
   
-  public void handle_input(Input input){
+  public void handleInput(Input input){
     switch(input){
       case PRESSED:
-        button.update_state(Input.x,Input.y);
-        scroll_velocity = 0;
+        button.updateState(Input.x,Input.y);
+        scrollVelocity = 0;
         break;
       case MOVED:
-        button.update_state(Input.x,Input.y);
-        if(!button.is_pressed){
-          scroll_position += Input.delta_y;
+        button.updateState(Input.x,Input.y);
+        if(!button.isPressed){
+          scrollPosition += Input.deltaY;
         }
         break;
       case RELEASED:
-        if(button.is_pressed){
-          button.update_state(Input.x,Input.y);
-          if(button.is_pressed){
-            button.is_pressed = false;
+        if(button.isPressed){
+          button.updateState(Input.x,Input.y);
+          if(button.isPressed){
+            button.isPressed = false;
             exit();
           }
         }
         else{
-          scroll_velocity = mouseY-pmouseY;//Input.delta_y;
-          scroll_velocity = Math.signum(scroll_velocity)*min(abs(scroll_velocity), UNIT/2);
-          //println("scoreboard released");
-          // delta_y A SZAR (mouseY - pmouseY működik)
+          scrollVelocity = mouseY-pmouseY; //Input.deltaY;
+          scrollVelocity = Math.signum(scrollVelocity)*min(abs(scrollVelocity), UNIT/2);
+          // println("scoreboard released");
+          // XXX deltaY  (mouseY - pmouseY működik)
         }
         break;
       default:
-        error_message("Scoreboard -> handle_input");
+        errorMessage("Scoreboard -> handleInput");
         break;
     }
   }
   
   public void update(){
-    if(abs(scroll_velocity) > UNIT/100){
-      scroll_position += scroll_velocity;
-      scroll_velocity *= DRAG;
+    if(abs(scrollVelocity) > UNIT/100){
+      scrollPosition += scrollVelocity;
+      scrollVelocity *= DRAG;
     }
-    else scroll_velocity = 0;
+    else scrollVelocity = 0;
     
-    if(scroll_position < min(height*0.9 - UNIT*7/6 - total_height, 0)){
-      scroll_position = lerp(scroll_position, min(height*0.9 - UNIT*7/6 - total_height, 0), 0.1);
-      scroll_velocity = 0;
+    if(scrollPosition < min(height*0.9 - UNIT*7/6 - totalHeight, 0)){
+      scrollPosition = lerp(scrollPosition, min(height*0.9 - UNIT*7/6 - totalHeight, 0), 0.1);
+      scrollVelocity = 0;
     }
-    else if(scroll_position > 0){
-      scroll_position = lerp(scroll_position, 0, 0.1);
-      scroll_velocity = 0;
+    else if(scrollPosition > 0){
+      scrollPosition = lerp(scrollPosition, 0, 0.1);
+      scrollVelocity = 0;
     }
   }
   
-  public void enter(Score score_in){
-    app_state = this;
+  public void enter(Score scoreIn){
+    appState = this;
     field.state = FieldState.NIGHT;
     
-    put(score_in);
+    put(scoreIn);
     
-    scroll_position = 0;
-    scroll_velocity = 0;
-    total_height = (length+1)*UNIT/3;
+    scrollPosition = 0;
+    scrollVelocity = 0;
+    totalHeight = (length+1)*UNIT/3;
   }
   
   public void exit(){
     transitioner.capture(this);
     transitioner.transition(0.35);
             
-    HOMESCREEN.enter(latest_score);
+    HOMESCREEN.enter(latestScore);
   }
   
-  private void put(Score score_in){
-    latest_score = score_in;
+  private void put(Score scoreIn){
+    latestScore = scoreIn;
     length++;
-    scores[length] = latest_score.value;
+    scores[length] = latestScore.value;
     
-    if(latest_score.value > highscore){
-      highscore = latest_score.value;
-      highscore_id = length;
+    if(latestScore.value > highscore){
+      highscore = latestScore.value;
+      highscoreId = length;
     }
   }
   
@@ -116,19 +116,19 @@ class Scoreboard implements AppState{
     pushMatrix();
     translate(0, height/10+UNIT);
     
-    float pos_y = scroll_position-UNIT*3/7;
+    float posY = scrollPosition-UNIT*3/7;
     for(short i = length; i >= 0; i--){
-      pos_y += UNIT/3;
-      if(pos_y < -UNIT || pos_y > height) continue;
+      posY += UNIT/3;
+      if(posY < -UNIT || posY > height) continue;
       
-      if(i == highscore_id) fill(38, 80, 100);
+      if(i == highscoreId) fill(38, 80, 100);
       else fill(100);
       
       textAlign(LEFT, TOP);
-      text("GAME #"+nf(i+1, 2), UNIT, pos_y);
+      text("GAME #"+nf(i+1, 2), UNIT, posY);
       
       textAlign(RIGHT, TOP);
-      text(int(scores[i]), width-UNIT, pos_y);
+      text(int(scores[i]), width-UNIT, posY);
       
       
     }
@@ -156,7 +156,7 @@ class Scoreboard implements AppState{
   }
   
   public void enter(){
-    app_state = this;
+    appState = this;
   }
 }
 
