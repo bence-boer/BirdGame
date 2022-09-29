@@ -1,58 +1,66 @@
+/**
+ * The Obstacle class is responsible for creating the obstacles that the player must avoid.
+ * 
+ *
+ * @author  Bence Boér
+ * @version 1.0
+ * @since   2022-09-01 
+ */
 abstract class Obstacle extends Entity{
   PImage skinDay, skinNight;
   
-  protected Obstacle(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
-    this.w = w;
-    this.h = h;
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
-    this.skinDay = skinDay;
-    this.skinNight = skinNight;
+  protected Obstacle(float widthIn, float heightIn, float xCoordinateIn, float yCoordinateIn, float xVelocityIn, float yVelocityIn, PImage skinDayIn, PImage skinNightIn){
+    this.width = widthIn;
+    this.height = heightIn;
+    this.xCoordinate = xCoordinateIn;
+    this.yCoordinate = yCoordinateIn;
+    this.xVelocity = xVelocityIn;
+    this.yVelocity = yVelocityIn;
+    this.skinDay = skinDayIn;
+    this.skinNight = skinNightIn;
   }
-  Obstacle(float w, float h, PImage skinDay, PImage skinNight){
-    this(w,h);
-    this.skinDay = skinDay;
-    this.skinNight = skinNight;
+  Obstacle(float widthIn, float heightIn, PImage skinDayIn, PImage skinNightIn){
+    this(widthIn,heightIn);
+    this.skinDay = skinDayIn;
+    this.skinNight = skinNightIn;
   }
-  Obstacle(float w, float h){
-    this.w = w;
-    this.h = h;
-    this.x = width+w/2;
-    this.y = height-field.GROUND_HEIGHT-h/2;
+  Obstacle(float widthIn, float heightIn){
+    this.width = widthIn;
+    this.height = heightIn;
+    this.xCoordinate = width+widthIn/2;
+    this.yCoordinate = height-field.GROUND_HEIGHT-heightIn/2;
   }
   
-  void move(float vel){
-    x -= vel;
+  public void move(float velocityIn){
+    this.xCoordinate -= velocityIn;
   }
   
   void display(FieldState state){
-    if(skinDay != null){
+    if(this.skinDay != null){
       switch(state){
         case DAY:
-          image(skinDay, x, y, w, h);
+          image(this.skinDay, this.xCoordinate, this.yCoordinate, this.width, this.height);
           break;
         case NIGHT:
-          image(skinNight, x, y, w, h);
+          image(this.skinNight, this.xCoordinate, this.yCoordinate, this.width, this.height);
           break;
       }
     }
     else{
       fill(#EBEEFF);
-      rect(x, y, w, h);
+      rect(this.xCoordinate, this.yCoordinate, this.width, this.height);
     }
   }
   
-  boolean collidesWith(Player p){
-    return (p.x+p.w/2 >= x-w/2 && p.x+p.w/2 <= x+w/2 ||
-            p.x-p.w/2 >= x-w/2 && p.x-p.w/2 <= x+w/2) &&
-           (p.y-p.h/2 <= y-h/2 && p.y+p.h/2 >= y-h/2 ||
-            p.y-p.h/2 <= y+h/2 && p.y+p.h/2 >= y+h/2);
+  boolean collidesWith(Player player){
+    return (((player.xCoordinate + player.width / 2) >= (this.xCoordinate - this.width / 2)) && (player.xCoordinate + player.width / 2) <= (this.xCoordinate + this.width / 2) ||
+            ((player.xCoordinate - player.width / 2) >= (this.xCoordinate - this.width / 2)) && (player.xCoordinate - player.width / 2) <= (this.xCoordinate + this.width / 2)) &&
+           (((player.yCoordinate - player.height / 2) <= (this.yCoordinate - this.height / 2)) && (player.yCoordinate + player.height / 2) >= (this.yCoordinate - this.height / 2) ||
+            ((player.yCoordinate - player.height / 2) <= (this.yCoordinate + this.height / 2)) && (player.yCoordinate + player.height / 2) >= (this.yCoordinate + this.height / 2));
   }
   
   void shadow(FieldState state){
-    float mult = map(y, height/4, height-field.GROUND_HEIGHT, 0.8, 1.2);
+    float multiplier = map(this.yCoordinate, Environment.HEIGHT/4, Environment.HEIGHT-field.GROUND_HEIGHT, 0.8, 1.2); // XXX: Should be specified in Environment.UNITs
     switch (state){
       case DAY:
         fill(#C59F34);
@@ -64,102 +72,124 @@ abstract class Obstacle extends Entity{
         fill(10,10,10,20);
         break;
     }
-    ellipse(x, height-field.GROUND_HEIGHT, w*mult, w/5*mult);
+    ellipse(this.xCoordinate, Environment.HEIGHT-field.GROUND_HEIGHT, this.width*multiplier, this.width/5*multiplier);
   }
   
   abstract Obstacle clone();
 }
 
 class Cactus extends Obstacle{
-  Cactus(float UNIT, PImage skinDay, PImage skinNight){
-    super(UNIT*0.75, UNIT*1.5, skinDay, skinNight);
+  Cactus(PImage skinDayIn, PImage skinNightIn){
+    super(Environment.UNIT*0.75, Environment.UNIT*1.5, skinDayIn, skinNightIn);
   }
-  private Cactus(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
-    super(w, h, x, y, vx, vy, skinDay, skinNight);
+  private Cactus(float widthIn, float heightIn, float xCoordinateIn, float yCoordinateIn, float xVelocityIn, float yVelocityIn, PImage skinDayIn, PImage skinNightIn){
+    super(widthIn, heightIn, xCoordinateIn, yCoordinateIn, xVelocityIn, yVelocityIn, skinDayIn, skinNightIn);
   }
   
-  boolean collidesWith(Player p){
-    float newCactusTop = y - h/2 + w/2;
-    float newPlayerBottom = p.y + p.h/2 - p.w/2;
-    return  sqrt(sq(p.x - x)+sq(newPlayerBottom - newCactusTop)) < w/2+p.w/2 || 
-           (p.x+p.w/2 >= x-w/2 && p.x+p.w/2 <= x+w/2 ||
-            p.x-p.w/2 >= x-w/2 && p.x-p.w/2 <= x+w/2) &&
+  boolean collidesWith(Player player){
+    float newCactusTop = this.yCoordinate - this.height / 2 + this.width / 2;
+    float newPlayerBottom = player.yCoordinate + player.height / 2 - player.width / 2;
+    return  sqrt(sq(player.xCoordinate - this.xCoordinate) + sq(newPlayerBottom - newCactusTop)) < this.width / 2 + player.width / 2 || 
+           (player.xCoordinate + player.width / 2 >= this.xCoordinate - this.width / 2 && player.xCoordinate + player.width / 2 <= this.xCoordinate + this.width / 2 ||
+            player.xCoordinate - player.width / 2 >= this.xCoordinate - this.width / 2 && player.xCoordinate - player.width / 2 <= this.xCoordinate + this.width / 2) &&
            (newPlayerBottom >= newCactusTop);
   }
   
   Cactus clone(){
-    return new Cactus(w, h, x, y, vx, vy, skinDay, skinNight);
+    return new Cactus(this.width,
+                      this.height,
+                      this.xCoordinate,
+                      this.yCoordinate,
+                      this.xVelocity,
+                      this.yVelocity,
+                      this.skinDay,
+                      this.skinNight);
   }
 }
 
 class Tumbleweed extends Obstacle{
-  float baseY;
-  int rotationPhase;
+  private float baseYCoordinate;
+  private int rotationPhase;
    
-  Tumbleweed(float UNIT, PImage skinDay, PImage skinNight){
-    super(UNIT/2, UNIT/2, skinDay, skinNight);
-    baseY = y;
-    vx = UNIT/20;
-    rotationPhase = 0;
+  Tumbleweed(PImage skinDayIn, PImage skinNightIn){
+    super(Environment.UNIT/2, Environment.UNIT/2, skinDayIn, skinNightIn);
+    this.baseYCoordinate = this.yCoordinate;
+    this.xVelocity = Environment.UNIT/20;
+    this.rotationPhase = 0;
   }
-  private Tumbleweed(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
-    super(w, h, x, y, vx, vy, skinDay, skinNight);
-    this.baseY = y;
+  private Tumbleweed(float widthIn, float heightIn, float xCoordinateIn, float yCoordinateIn, float xVelocityIn, float yVelocityIn, PImage skinDayIn, PImage skinNightIn){
+    super(widthIn, heightIn, xCoordinateIn, yCoordinateIn, xVelocityIn, yVelocityIn, skinDayIn, skinNightIn);
+    this.baseYCoordinate = yCoordinateIn;
   }
   
-  void move(float vel){
-    x -= vel+vx;
-    vy = abs(sin(radians(frameCount*5+180))*h/2);
-    y = baseY - vy;
+  void move(float xVelocityIn){
+    this.xCoordinate -= xVelocityIn + this.xVelocity;
+
+    this.yVelocity = abs(sin(radians(frameCount * 5 + 180)) * this.height / 2);
+    this.yCoordinate = this.baseYCoordinate - this.yVelocity;
     
-    rotationPhase = -floor(frameCount/6)%16;
+    this.rotationPhase = -floor(frameCount / 6) % 16;
   }
   
   void display(FieldState state){
     pushMatrix();
-    translate(x,y);
-    rotate(rotationPhase*HALF_PI/4);
+    translate(this.xCoordinate, this.yCoordinate);
+    rotate(this.rotationPhase * HALF_PI / 4);
     switch(state){
       case DAY:
-        image(skinDay, 0, 0, w, h);
+        image(this.skinDay, 0, 0, this.width, this.height);
         break;
       case NIGHT:
-        image(skinNight, 0, 0, w, h);
+        image(this.skinNight, 0, 0, this.width, this.height);
         break;
     }
     popMatrix();
   }
   
-  boolean collidesWith(Player p){
-    return sqrt(sq(x - p.x) + sq(y - p.y - p.h/2 + p.w/2)) < p.w/2 + h/2;
+  boolean collidesWith(Player player){
+    return sqrt(sq(this.xCoordinate - player.xCoordinate) + sq(this.yCoordinate - player.yCoordinate - player.height / 2 + player.width / 2)) < player.width / 2 + this.height / 2;
   }
   
   Tumbleweed clone(){
-    return new Tumbleweed(w, h, x, y, vx, vy, skinDay, skinNight);
+    return new Tumbleweed(this.width,
+                          this.height,
+                          this.xCoordinate,
+                          this.yCoordinate,
+                          this.xVelocity,
+                          this.yVelocity,
+                          this.skinDay,
+                          this.skinNight);
   }
 }
 
 class Cloud extends Obstacle{
-  Cloud(float UNIT, PImage skinDay, PImage skinNight){
-    super(UNIT*1.5, UNIT*0.75, skinDay, skinNight);
-    y -= UNIT*3/4;
-    vx = UNIT / 40;
+  Cloud(PImage skinDayIn, PImage skinNightIn){
+    super(Environment.UNIT * 1.5, Environment.UNIT * 0.75, this.skinDayIn, this.skinNightIn);
+    this.yCoordinate -= Environment.UNIT * 0.75;
+    this.xVelocity = Environment.UNIT / 40;
   }
-  private Cloud(float w, float h, float x, float y, float vx, float vy, PImage skinDay, PImage skinNight){
-    super(w, h, x, y, vx, vy, skinDay, skinNight);
-  }
-  
-  void move(float vel){
-    x -= vel+vx;
+  private Cloud(float widthIn, float heightIn, float xCoordinateIn, float yCoordinateIn, float xVelocityIn, float yVelocityIn, PImage skinDayIn, PImage skinNightIn){
+    super(widthIn, heightIn, xCoordinateIn, yCoordinateIn, xVelocityIn, yVelocityIn, skinDayIn, skinNightIn);
   }
   
-  boolean collidesWith(Player p){
-    return p.y-p.h/2 <= y+h/2 &&
-           (sqrt(sq(x - p.x) + sq(y + h/2 - p.y + p.h/2 - p.w/2)) < p.w/2 + h/2 ||
-            sqrt(sq(x - p.x) + sq(y + h/2 - p.y - p.h/2 + p.w/2)) < p.w/2 + h/2);
+  void move(float xVelocityIn){
+    this.xCoordinate -= xVelocityIn + this.xVelocityIn;
+  }
+  
+  boolean collidesWith(Player player){
+    return player.yCoordinate - player.height / 2 <= this.yCoordinate + this.height / 2 &&
+           (sqrt(sq(this.xCoordinate - player.xCoordinate) + sq(this.yCoordinate + this.height / 2 - player.yCoordinate + player.height / 2 - player.width / 2)) < player.width / 2 + this.height / 2 ||
+            sqrt(sq(this.xCoordinate - player.xCoordinate) + sq(this.yCoordinate + this.height / 2 - player.yCoordinate - player.height / 2 + player.width / 2)) < player.width / 2 + this.height / 2);
   }
   
   Cloud clone(){
-    return new Cloud(w, h, x, y, vx, vy, skinDay, skinNight);
+    return new Cloud(this.width,
+                     this.height,
+                     this.xCoordinate,
+                     this.yCoordinate,
+                     this.xVelocity,
+                     this.yVelocity,
+                     this.skinDay,
+                     this.skinNight);
   }
 }

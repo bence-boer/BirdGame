@@ -8,26 +8,14 @@ public AppStateTransitioner transitioner;
 
 private Input currentInput;
 
-private float UNIT;
-private PFont f;
+private PFont FONT;
 
 
-void setup(){
-  fullScreen(P2D);
-  frameRate(100);
-  strokeCap(ROUND);
-  rectMode(CENTER);
-  imageMode(CENTER);
-  textAlign(RIGHT,CENTER);
-  colorMode(HSB,100);
-  
-  font = createFont("arcadeclassic.ttf",72);
-  textFont(font);
-  textSize(60);
-  noStroke();
-  
-  UNIT = width/10;
-  
+public void setup(){
+  Environment.setup(width, height);
+  setupDisplaySettings();
+  setupFontSettings();
+    
   GAME = new GameState();
   HOMESCREEN = new HomeScreen();
   SCOREBOARD = new Scoreboard();
@@ -42,7 +30,7 @@ void setup(){
   transitioner = new AppStateTransitioner();
 }
 
-void draw(){
+public void draw(){
   if(!transitioner.active){
     appState.update();
     appState.display();
@@ -55,12 +43,43 @@ void draw(){
   }
 }
 
+private void setupDisplaySettings(){
+  fullScreen(P2D);
+  frameRate(60);
+  strokeCap(ROUND);
+  rectMode(CENTER);
+  imageMode(CENTER);
+  textAlign(RIGHT,CENTER);
+  colorMode(HSB,100);
+}
+
+private void setupFontSettings(){
+  FONT = createFont("arcadeclassic.ttf",72);
+  textFont(FONT);
+  textSize(60);
+  noStroke();
+}
+
 interface AppState{
   public void handleInput(Input input);
   public void update();
   public void display();
   public void enter(Score score);
   public void exit();
+}
+
+static class Environment{
+  static float UNIT;
+  // static PFont FONT; // TODO: implement font
+  static final WIDTH;
+  static final HEIGHT;
+
+  static void setup(float windowWidth, float windowHeight){
+    WIDTH = windowWidth;
+    HEIGHT = windowHeight;
+    UNIT = windowWidth/10; // XXX: Should be specified relative to height
+    // FONT = createFont("arcadeclassic.ttf",72);
+  }
 }
 
 void errorMessage(String origin){

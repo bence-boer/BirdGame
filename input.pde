@@ -16,8 +16,8 @@ void touchMoved(){
 
 void touchEnded(){
   if(touches.length == 0){
-    // ITT A HIBA: updateValues input típus átállítás előtt
-    // következmény: 0-ra default-ol
+    /* FIXME - updateValues input típus átállítás előtt
+       következmény: 0-ra default-ol */
     if(GAME.isOn()) currentInput = currentInput == Input.UP_PRESSED ? Input.UP_RELEASED : Input.DOWN_RELEASED;
     else currentInput = Input.RELEASED;
     Input.updateValues(mouseX, mouseY, currentInput);
@@ -52,12 +52,10 @@ static enum Input{
       case MOVED:
         deltaX = xIn - x;
         deltaY = yIn - y;
-        //println("moved - x: "+deltaX+"; y: "+deltaY);
         break;
       case RELEASED:
         deltaX = xIn - x;
         deltaY = yIn - y;
-        //println("released - x: "+deltaX+"; y: "+deltaY);
         break;
       default:
         deltaX = 0;

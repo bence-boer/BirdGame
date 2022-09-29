@@ -10,7 +10,7 @@ class GameField{
   
   ArrayList<Obstacle> obstacles;
   final float GROUND_HEIGHT;
-  float offset;
+  private float offset;
   PImage cactusDay, cactusNight,
          tumbleweedDay, tumbleweedNight,
          cloudDay, cloudNight;
@@ -21,20 +21,20 @@ class GameField{
   
   GameField(){
     this.obstacles = new ArrayList<Obstacle>();
-    this.GROUND_HEIGHT = height/5;
-    offset = 0;
+    this.GROUND_HEIGHT = Environment.HEIGHT / 5;
+    this.offset = 0;
     
     this.state = FieldState.NIGHT;
     
     this.t1 = 80;
     this.t2 = 50;
     
-    float d1 = width;
-    this.v1 = d1/(float)t1;
+    float d1 = Environment.WIDTH;
+    this.v1 = d1 / (float)t1;
     
     float d2 = 1.5; 
-    this.v2a = d2/(float)t2;
-    this.v2b = v2a*t1/t2;
+    this.v2a = d2 / (float)t2;
+    this.v2b = v2a * t1 / t2;
   }
   
   void update(){
@@ -55,12 +55,12 @@ class GameField{
   void updateObstacles(){
     for(int i = obstacles.size()-1; i >= 0; i--){
       obstacles.get(i).move(v1);
-      if(obstacles.get(i).x < -obstacles.get(i).w/2) obstacles.remove(i);
+      if(obstacles.get(i).xCoordinate < -obstacles.get(i).width/2) obstacles.remove(i);
     }
   }
   
   void spawnRandomObstacle(){
-    int type = 3-floor(sqrt(random(14)+1));
+    int type = 3 - floor(sqrt(random(14) + 1));
     Obstacle nextObstacle = obstacleSpawners.get(type).spawn();
     obstacles.add(nextObstacle);
   }
@@ -72,39 +72,40 @@ class GameField{
     
         fill(#F6C740);
         ground();
-        image(sun, width/5, width/10, UNIT, UNIT);
+        image(this.sun, Environment.WIDTH / 5, Environment.WIDTH / 10, Environment.UNIT, Environment.UNIT);
         break;
       case NIGHT:
         background(0);
     
         fill(20);
         ground();
-        image(moon, width/5, width/10, UNIT, UNIT);
+        image(this.moon, Environment.WIDTH / 5, Environment.WIDTH / 10, Environment.UNIT, Environment.UNIT);
         break;
       default:
         errorMessage("Field -> display() -> switch(state)");
         break;
     }
-    for(Obstacle o: obstacles){
-      o.shadow(state);
-      o.display(state);
+    for(Obstacle obstacle: obstacles){
+      obstacle.shadow(state);
+      obstacle.display(state);
     }
   }
   
+  // XXX: DON'T TOUCH IT
   void ground(){
-    float xoff = offset;
+    float xoff = this.offset;
     
     beginShape();
-    vertex(0,height);
+    vertex(0, Environment.HEIGHT);
     for(int i = 0; i <= t2; i++){
-      vertex(i*width/t2, height-GROUND_HEIGHT-map(noise(xoff), 0, 1, height*0.05, height*0.15));
+      vertex(i * width / t2, Environment.HEIGHT - GROUND_HEIGHT - map(noise(xoff), 0, 1, Environment.HEIGHT * 0.05, Environment.HEIGHT * 0.15));
       xoff += v2b;
     }
     vertex(width,height);
     endShape(CLOSE);
-    if(GAME.isOn()) offset += v2a;
+    if(GAME.isOn()) this.offset += v2a;
     
-    rect(width/2, height-GROUND_HEIGHT/2, width, GROUND_HEIGHT*1.4);
+    rect(Environment.WIDTH / 2, Environment.HEIGHT - GROUND_HEIGHT/2, Environment.WIDTH, GROUND_HEIGHT * 1.4);
   }
   
   void loadCostumes(){
@@ -127,9 +128,9 @@ class GameField{
   }
   
   void initializeSpawners(){
-    CACTUS_SPAWNER = new ObstacleSpawner(new Cactus(UNIT, cactusDay, cactusNight));
-    TUMBLEWEED_SPAWNER = new ObstacleSpawner(new Tumbleweed(UNIT, tumbleweedDay, tumbleweedNight));
-    CLOUD_SPAWNER = new ObstacleSpawner(new Cloud(UNIT, cloudDay, cloudNight));
+    CACTUS_SPAWNER = new ObstacleSpawner(new Cactus(Environment.UNIT, cactusDay, cactusNight));
+    TUMBLEWEED_SPAWNER = new ObstacleSpawner(new Tumbleweed(Environment.UNIT, tumbleweedDay, tumbleweedNight));
+    CLOUD_SPAWNER = new ObstacleSpawner(new Cloud(Environment.UNIT, cloudDay, cloudNight));
     
     obstacleSpawners = new ArrayList<ObstacleSpawner>();
     obstacleSpawners.add(CACTUS_SPAWNER);
@@ -140,14 +141,14 @@ class GameField{
   void reset(){
     this.obstacles = new ArrayList<Obstacle>();
    
-    offset = 0;
+    this.offset = 0;
     
     float d1 = width;
-    this.v1 = d1/(float)t1;
+    this.v1 = d1 / (float)t1;
     
     float d2 = 1.5; 
-    this.v2a = d2/(float)t2;
-    this.v2b = v2a*t1/t2;
+    this.v2a = d2 / (float)t2;
+    this.v2b = v2a * t1 / t2;
   }
 }
 

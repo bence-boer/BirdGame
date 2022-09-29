@@ -20,13 +20,13 @@ public class GameState implements AppState{
   }
   
   public void handleInput(Input input){
-    player.handleInput(input);
+    this.player.handleInput(input);
   }
   
   private void reset(){
-    player.reset();
-    field.reset();
-    score.reset();
+    this.player.reset();
+    field.reset(); // XXX: Should be modularized
+    this.score.reset();
     
     frameCount = 0;
   }
@@ -35,7 +35,7 @@ public class GameState implements AppState{
     this.score = score;
     this.reset();
     appState = this;
-    field.state = FieldState.DAY;
+    field.state = FieldState.DAY; // XXX: Should be modularized
   }
   
   public void exit(){
@@ -46,17 +46,17 @@ public class GameState implements AppState{
   }
   
   public void update(){
-    field.update();
-    player.update();
-    score.update();
+    field.update(); // XXX: Should be modularized
+    this.player.update();
+    this.score.update();
   }
   
   public void display(){
-    field.display();
-    player.display();
+    field.display(); // XXX: Should be modularized
+    this.player.display();
     
     fill(20);
-    score.display();
+    this.score.display();
   }
   
   public boolean isOn(){

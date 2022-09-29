@@ -54,7 +54,6 @@ class Scoreboard implements AppState{
         else{
           scrollVelocity = mouseY-pmouseY; //Input.deltaY;
           scrollVelocity = Math.signum(scrollVelocity)*min(abs(scrollVelocity), UNIT/2);
-          // println("scoreboard released");
           // XXX deltaY  (mouseY - pmouseY működik)
         }
         break;

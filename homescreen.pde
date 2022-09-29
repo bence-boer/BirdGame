@@ -4,11 +4,11 @@ public class HomeScreen implements AppState{
   private Score score;
   
   HomeScreen(){
-    button = new StartButton();
-    button.loadCostume();
+    this.button = new StartButton();
+    this.button.loadCostume();
     
-    score = new Score();
-    countdown = 3;
+    this.score = new Score();
+    this.countdown = 3;
   }
   
   public void enter(Score score){
@@ -22,16 +22,16 @@ public class HomeScreen implements AppState{
     transitioner.capture(this);
     transitioner.transition(0.35, 0.2);
     GAME.enter(score);
-    countdown = 0;
+    this.countdown = 0;
   }
   
   public void reset(){
-    countdown = 3;
+    this.countdown = 3;
   }
   
   public void update(){
-    if(countdown == 2) countdown--;
-    else if(countdown == 1){
+    if(this.countdown == 2) this.countdown--;
+    else if(this.countdown == 1){
       exit();
     } 
   }
@@ -55,7 +55,7 @@ public class HomeScreen implements AppState{
         if(button.isPressed){
           button.updateState(Input.x,Input.y);
           if(button.isPressed){
-            countdown = 2;
+            this.countdown = 2;
             button.isPressed = false;
           }
         }
