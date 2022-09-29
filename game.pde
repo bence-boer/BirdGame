@@ -14,9 +14,9 @@ public class GameState implements AppState{
   Score score;
   
   GameState(){
-    initializePlayerStates();
-    player = new Player();
-    player.loadCostumes();
+    this.initializePlayerStates();
+    this.player = new Player();
+    this.player.loadCostumes();
   }
   
   public void handleInput(Input input){

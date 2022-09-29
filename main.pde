@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.HashMap;
+
 public GameState GAME;
 public HomeScreen HOMESCREEN;
 public Scoreboard SCOREBOARD;
@@ -12,7 +16,8 @@ private PFont FONT;
 
 
 public void setup(){
-  fullScreen(P2D);
+  // fullScreen(P2D);
+  size(2000, 1000, P2D);
   Environment.setup(width, height);
   setupDisplaySettings();
   setupFontSettings();

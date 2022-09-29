@@ -27,8 +27,8 @@ abstract class Obstacle extends Entity{
   Obstacle(float widthIn, float heightIn){
     this.width = widthIn;
     this.height = heightIn;
-    this.xCoordinate = width+widthIn/2;
-    this.yCoordinate = height-gameField.GROUND_HEIGHT-heightIn/2;
+    this.xCoordinate = Environment.WIDTH + widthIn/2;
+    this.yCoordinate = Environment.HEIGHT - gameField.GROUND_HEIGHT - heightIn / 2;
   }
   
   public void move(float velocityIn){
@@ -173,7 +173,7 @@ class Cloud extends Obstacle{
   }
   
   void move(float xVelocityIn){
-    this.xCoordinate -= xVelocityIn + xVelocityIn;
+    this.xCoordinate -= xVelocityIn + xVelocity;
   }
   
   boolean collidesWith(Player player){

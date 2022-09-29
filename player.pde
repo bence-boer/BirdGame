@@ -14,13 +14,13 @@ class Player extends Entity{
   private int step;
   
   Player(){
-    this.width = Environment.UNIT*2/3;
+    this.width = Environment.UNIT * 2 / 3;
     this.height = Environment.UNIT;
     
-    this.xCoordinate = width/5;
-    this.yCoordinate = width/10;
+    this.xCoordinate = Environment.WIDTH / 5;
+    this.yCoordinate = Environment.WIDTH / 10;
     
-    this.xVelocity = width/80;
+    this.xVelocity = Environment.WIDTH / 80;
     this.yVelocity = 0;
     
     this.state = FALLING_STATE;
@@ -29,7 +29,7 @@ class Player extends Entity{
     this.step = 1;
   }
   
-  void update(){
+  private void update(){
     this.state.update(this);
     this.move();
     this.cycleCostume();
@@ -44,31 +44,31 @@ class Player extends Entity{
     }
   }
   
-  void move(){
+  private void move(){
     this.yCoordinate += this.yVelocity;
   }
   
-  void cycleCostume(){
-    if(frameCount % 5 == 0) this.step = 1-this.step;
+  private void cycleCostume(){
+    if(frameCount % 5 == 0) this.step = 1 - this.step;
   }
   
-  void handleInput(Input input){
+  private void handleInput(Input input){
     state.handleInput(this, input);
   } 
   
-  void die(){
+  private void die(){
     GAME.exit();
   }
   
-  boolean hasLanded(){
-    return this.yCoordinate + this.height/2 > Environment.HEIGHT-gameField.GROUND_HEIGHT;
+  private boolean hasLanded(){
+    return this.yCoordinate + this.height/2 > Environment.HEIGHT - gameField.GROUND_HEIGHT;
   }
   
-  void reposition(){
-    this.yCoordinate = Environment.HEIGHT-gameField.GROUND_HEIGHT-this.height/2;
+  private void reposition(){
+    this.yCoordinate = Environment.HEIGHT - gameField.GROUND_HEIGHT - this.height / 2;
   }
 
-  void display(){
+  private void display(){
     this.shadow();
     image(this.costumes[this.step],
           this.xCoordinate,
@@ -77,22 +77,22 @@ class Player extends Entity{
           this.height);
   }
   
-  void loadCostumes(){
+  private void loadCostumes(){
     this.runningSprite = new PImage[2];
     this.duckingSprite = new PImage[2];
     
-    this.runningSprite[0] = loadImage("birdRunning_1.png");
-    this.runningSprite[1] = loadImage("birdRunning_2.png");
-    this.duckingSprite[0] = loadImage("birdDodging_1.png");
-    this.duckingSprite[1] = loadImage("birdDodging_2.png");
+    this.runningSprite[0] = loadImage("bird_running_1.png");
+    this.runningSprite[1] = loadImage("bird_running_2.png");
+    this.duckingSprite[0] = loadImage("bird_dodging_1.png");
+    this.duckingSprite[1] = loadImage("bird_dodging_2.png");
     
     this.costumes = runningSprite;
   }
   
-  void reset(){
-    this.xCoordinate = width/5;
-    this.yCoordinate = width/10;
-    this.xVelocity = width/80;
+  private void reset(){
+    this.xCoordinate = Environment.WIDTH / 5;
+    this.yCoordinate = Environment.WIDTH / 10;
+    this.xVelocity = Environment.WIDTH / 80;
     this.yVelocity = 0;
     this.width = Environment.UNIT*2/3;
     this.height = Environment.UNIT;
@@ -103,11 +103,11 @@ class Player extends Entity{
 }
 
 abstract class Entity{
-  public float width, height;
-  public float xCoordinate, yCoordinate;
-  public float xVelocity, yVelocity;
+  protected float width, height;
+  protected float xCoordinate, yCoordinate;
+  protected float xVelocity, yVelocity;
   
-  void shadow(){
+  protected void shadow(){
     float multiplier = map(this.yCoordinate, Environment.HEIGHT / 4, Environment.HEIGHT - gameField.GROUND_HEIGHT, 0.8, 1.2);
     fill(#C59F34);
     ellipse(this.xCoordinate, Environment.HEIGHT - gameField.GROUND_HEIGHT, this.width * multiplier, this.width / 8 * multiplier);
