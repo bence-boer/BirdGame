@@ -15,10 +15,10 @@ class Scoreboard implements AppState{
   private final float DRAG = 0.95;
   
   Scoreboard(){
-    scores = new short[10000];
-    length = -1;
-    highscoreId = 0;
-    button = new Button(width-UNIT*1.25, UNIT/2, UNIT/3);
+    this.scores = new short[10000];
+    this.length = -1;
+    this.highscoreId = 0;
+    this.button = new Button(Environment.WIDTH - Environment.UNIT * 1.25, Environment.UNIT / 2, Environment.UNIT / 3);
     
     //loadSavedData();
   }
@@ -27,33 +27,33 @@ class Scoreboard implements AppState{
     Score temp = new Score();
     for(int i = 0; i < 80; i++){
       temp.value = (short)floor(random(random(1000)));
-      put(temp);
+      this.put(temp);
     }
   }
   
   public void handleInput(Input input){
     switch(input){
       case PRESSED:
-        button.updateState(Input.x,Input.y);
-        scrollVelocity = 0;
+        this.button.updateState(Input.x, Input.y);
+        this.scrollVelocity = 0;
         break;
       case MOVED:
-        button.updateState(Input.x,Input.y);
-        if(!button.isPressed){
-          scrollPosition += Input.deltaY;
+        this.button.updateState(Input.x, Input.y);
+        if(!this.button.isPressed()){
+          this.scrollPosition += Input.deltaY;
         }
         break;
       case RELEASED:
-        if(button.isPressed){
-          button.updateState(Input.x,Input.y);
-          if(button.isPressed){
-            button.isPressed = false;
+        if(this.button.isPressed()){
+          this.button.updateState(Input.x, Input.y);
+          if(this.button.isPressed()){
+            this.button.setPressed(false);
             exit();
           }
         }
         else{
-          scrollVelocity = mouseY-pmouseY; //Input.deltaY;
-          scrollVelocity = Math.signum(scrollVelocity)*min(abs(scrollVelocity), UNIT/2);
+          this.scrollVelocity = mouseY - pmouseY; //Input.deltaY;
+          this.scrollVelocity = Math.signum(this.scrollVelocity) * min(abs(this.scrollVelocity), Environment.UNIT/2);
           // XXX deltaY  (mouseY - pmouseY működik)
         }
         break;
@@ -64,31 +64,31 @@ class Scoreboard implements AppState{
   }
   
   public void update(){
-    if(abs(scrollVelocity) > UNIT/100){
-      scrollPosition += scrollVelocity;
-      scrollVelocity *= DRAG;
+    if(abs(scrollVelocity) > Environment.UNIT / 100){
+      this.scrollPosition += this.scrollVelocity;
+      this.scrollVelocity *= this.DRAG;
     }
-    else scrollVelocity = 0;
+    else this.scrollVelocity = 0;
     
-    if(scrollPosition < min(height*0.9 - UNIT*7/6 - totalHeight, 0)){
-      scrollPosition = lerp(scrollPosition, min(height*0.9 - UNIT*7/6 - totalHeight, 0), 0.1);
-      scrollVelocity = 0;
+    if(this.scrollPosition < min(Environment.HEIGHT * 0.9 - Environment.UNIT * 7 / 6 - this.totalHeight, 0)){
+      this.scrollPosition = lerp(this.scrollPosition, min(Environment.HEIGHT * 0.9 - Environment.UNIT * 7 / 6 - this.totalHeight, 0), 0.1);
+      this.scrollVelocity = 0;
     }
-    else if(scrollPosition > 0){
-      scrollPosition = lerp(scrollPosition, 0, 0.1);
-      scrollVelocity = 0;
+    else if(this.scrollPosition > 0){
+      this.scrollPosition = lerp(this.scrollPosition, 0, 0.1);
+      this.scrollVelocity = 0;
     }
   }
   
   public void enter(Score scoreIn){
     appState = this;
-    field.state = FieldState.NIGHT;
+    gameField.state = FieldState.NIGHT;
     
-    put(scoreIn);
+    this.put(scoreIn);
     
-    scrollPosition = 0;
-    scrollVelocity = 0;
-    totalHeight = (length+1)*UNIT/3;
+    this.scrollPosition = 0;
+    this.scrollVelocity = 0;
+    this.totalHeight = (this.length + 1) * Environment.UNIT / 3;
   }
   
   public void exit(){
@@ -99,13 +99,13 @@ class Scoreboard implements AppState{
   }
   
   private void put(Score scoreIn){
-    latestScore = scoreIn;
-    length++;
-    scores[length] = latestScore.value;
+    this.latestScore = scoreIn;
+    this.length++;
+    this.scores[length] = this.latestScore.value;
     
-    if(latestScore.value > highscore){
-      highscore = latestScore.value;
-      highscoreId = length;
+    if(this.latestScore.value > this.highscore){
+      this.highscore = this.latestScore.value;
+      this.highscoreId = this.length;
     }
   }
   
@@ -113,45 +113,45 @@ class Scoreboard implements AppState{
     background(0);
     
     pushMatrix();
-    translate(0, height/10+UNIT);
+    translate(0, height / 10 + Environment.UNIT);
     
-    float posY = scrollPosition-UNIT*3/7;
+    float posY = this.scrollPosition - Environment.UNIT * 3 / 7;
     for(short i = length; i >= 0; i--){
-      posY += UNIT/3;
-      if(posY < -UNIT || posY > height) continue;
+      posY += Environment.UNIT / 3;
+      if((posY < -Environment.UNIT) || (posY > Environment.HEIGHT)) continue;
       
-      if(i == highscoreId) fill(38, 80, 100);
+      if(i == this.highscoreId) fill(38, 80, 100);
       else fill(100);
       
       textAlign(LEFT, TOP);
-      text("GAME #"+nf(i+1, 2), UNIT, posY);
+      text("GAME #" + nf(i + 1, 2), Environment.UNIT, posY);
       
       textAlign(RIGHT, TOP);
-      text(int(scores[i]), width-UNIT, posY);
+      text(int(this.scores[i]), Environment.WIDTH - Environment.UNIT, posY);
       
       
     }
     popMatrix();
     
     fill(0);
-    rect(width/2, UNIT/2+10, width, UNIT+20);
+    rect(Environment.WIDTH / 2, Environment.UNIT / 2 + 10, Environment.WIDTH, Environment.UNIT + 20);
     
     pushMatrix();
-    translate(0, UNIT/2);
+    translate(0, Environment.UNIT / 2);
     
     pushStyle();
     fill(100);
     textAlign(LEFT, CENTER);
-    textSize(UNIT/2);
-    text("SCOREBOARD", UNIT, 0);
+    textSize(Environment.UNIT / 2);
+    text("SCOREBOARD", Environment.UNIT, 0);
     
     stroke(100);
     strokeWeight(2);
-    line(UNIT, UNIT/2, width-UNIT, UNIT/2);
+    line(Environment.UNIT, Environment.UNIT / 2, Environment.WIDTH - Environment.UNIT, Environment.UNIT / 2);
     popStyle();
     
     popMatrix();
-    button.display();
+    this.button.display();
   }
   
   public void enter(){
@@ -163,22 +163,22 @@ class Score{
   public short value, highscore;
   
   Score(){
-    value = 0;
-    highscore = 0;
+    this.value = 0;
+    this.highscore = 0;
   }
   
   public void update(){
-    if(frameCount % 2 == 0) value++;
-    if(value > highscore) highscore = value;
+    if(frameCount % 2 == 0) this.value++;
+    if(this.value > this.highscore) this.highscore = this.value;
   }
   
   public void display(){
-    text("HIGHSCORE  "+highscore, width*0.85, height*0.1);
-    text("SCORE  "+value, width*0.85, height*0.17);
+    text("HIGHSCORE  " + this.highscore, Environment.WIDTH * 0.85, Environment.HEIGHT * 0.1);
+    text("SCORE  " + this.value, Environment.WIDTH * 0.85, Environment.HEIGHT * 0.17);
   }
   
   public void reset(){
-    value = 0;
-    highscore = SCOREBOARD.highscore;
+    this.value = 0;
+    this.highscore = SCOREBOARD.highscore;
   }
 }

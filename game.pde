@@ -25,7 +25,7 @@ public class GameState implements AppState{
   
   private void reset(){
     this.player.reset();
-    field.reset(); // XXX: Should be modularized
+    gameField.reset(); // XXX: Should be modularized
     this.score.reset();
     
     frameCount = 0;
@@ -35,7 +35,7 @@ public class GameState implements AppState{
     this.score = score;
     this.reset();
     appState = this;
-    field.state = FieldState.DAY; // XXX: Should be modularized
+    gameField.state = FieldState.DAY; // XXX: Should be modularized
   }
   
   public void exit(){
@@ -46,13 +46,13 @@ public class GameState implements AppState{
   }
   
   public void update(){
-    field.update(); // XXX: Should be modularized
+    gameField.update(); // XXX: Should be modularized
     this.player.update();
     this.score.update();
   }
   
   public void display(){
-    field.display(); // XXX: Should be modularized
+    gameField.display(); // XXX: Should be modularized
     this.player.display();
     
     fill(20);

@@ -12,6 +12,7 @@ private PFont FONT;
 
 
 public void setup(){
+  fullScreen(P2D);
   Environment.setup(width, height);
   setupDisplaySettings();
   setupFontSettings();
@@ -44,7 +45,6 @@ public void draw(){
 }
 
 private void setupDisplaySettings(){
-  fullScreen(P2D);
   frameRate(60);
   strokeCap(ROUND);
   rectMode(CENTER);
@@ -71,8 +71,8 @@ interface AppState{
 static class Environment{
   static float UNIT;
   // static PFont FONT; // TODO: implement font
-  static final WIDTH;
-  static final HEIGHT;
+  static float WIDTH;
+  static float HEIGHT;
 
   static void setup(float windowWidth, float windowHeight){
     WIDTH = windowWidth;

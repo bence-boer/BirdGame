@@ -14,8 +14,8 @@ class Player extends Entity{
   private int step;
   
   Player(){
-    this.width = UNIT*2/3;
-    this.height = UNIT;
+    this.width = Environment.UNIT*2/3;
+    this.height = Environment.UNIT;
     
     this.xCoordinate = width/5;
     this.yCoordinate = width/10;
@@ -37,7 +37,7 @@ class Player extends Entity{
   }
   
   void checkForCollision(){
-    for(Obstacle obstacle: field.obstacles){
+    for(Obstacle obstacle: gameField.obstacles){
       if(obstacle.collidesWith(this)){
         this.die();
       }
@@ -61,11 +61,11 @@ class Player extends Entity{
   }
   
   boolean hasLanded(){
-    return this.yCoordinate + this.height/2 > Environment.HEIGHT-field.GROUND_HEIGHT;
+    return this.yCoordinate + this.height/2 > Environment.HEIGHT-gameField.GROUND_HEIGHT;
   }
   
   void reposition(){
-    this.yCoordinate = Environment.HEIGHT-field.GROUND_HEIGHT-this.height/2;
+    this.yCoordinate = Environment.HEIGHT-gameField.GROUND_HEIGHT-this.height/2;
   }
 
   void display(){
@@ -94,8 +94,8 @@ class Player extends Entity{
     this.yCoordinate = width/10;
     this.xVelocity = width/80;
     this.yVelocity = 0;
-    this.width = UNIT*2/3;
-    this.height = UNIT;
+    this.width = Environment.UNIT*2/3;
+    this.height = Environment.UNIT;
     
     this.state = FALLING_STATE;
     this.state.enter(this);
@@ -108,8 +108,8 @@ abstract class Entity{
   public float xVelocity, yVelocity;
   
   void shadow(){
-    float multiplier = map(this.yCoordinate, Environment.HEIGHT / 4, Environment.HEIGHT - field.GROUND_HEIGHT, 0.8, 1.2);
+    float multiplier = map(this.yCoordinate, Environment.HEIGHT / 4, Environment.HEIGHT - gameField.GROUND_HEIGHT, 0.8, 1.2);
     fill(#C59F34);
-    ellipse(this.xCoordinate, Environment.HEIGHT - field.GROUND_HEIGHT, this.width * multiplier, this.width / 8 * multiplier);
+    ellipse(this.xCoordinate, Environment.HEIGHT - gameField.GROUND_HEIGHT, this.width * multiplier, this.width / 8 * multiplier);
   }
 }

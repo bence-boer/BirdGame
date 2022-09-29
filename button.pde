@@ -15,11 +15,11 @@ public class Button{
   private boolean isPressed;
   
   Button(float xCoordinateIn, float yCoordinateIn, float radiusIn){
-    this.xCoordinate = xCoordIn;
-    this.yCoordinate = yCoordIn;
+    this.xCoordinate = xCoordinateIn;
+    this.yCoordinate = yCoordinateIn;
     this.radius = radiusIn;
-    this.radiusOriginal = radiusIn;
-    this.radiusWhenPressed = radiusIn*0.8;
+    this.RADIUS_ORIGINAL = radiusIn;
+    this.RADIUS_WHEN_PRESSED = radiusIn*0.8;
   }
   Button(float xCoordinateIn, float yCoordinateIn){
     this(xCoordinateIn, yCoordinateIn, Environment.UNIT);
@@ -27,6 +27,10 @@ public class Button{
   
   public boolean isPressed(){
     return this.isPressed;
+  }
+  
+  public void setPressed(boolean value){
+    this.isPressed = value;
   }
 
   public void updateState(float xCoordinateIn, float yCoordinateIn){

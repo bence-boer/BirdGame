@@ -15,7 +15,7 @@ public class HomeScreen implements AppState{
     this.score = score;
     this.reset();
     appState = this;
-    field.state = FieldState.NIGHT;
+    gameField.state = FieldState.NIGHT;
   }
   
   public void exit(){
@@ -36,7 +36,7 @@ public class HomeScreen implements AppState{
     } 
   }
   public void display(){
-    field.display();
+    gameField.display();
     button.display();
     
     fill(80);
@@ -52,11 +52,11 @@ public class HomeScreen implements AppState{
         button.updateState(Input.x,Input.y);
         break;
       case RELEASED:
-        if(button.isPressed){
+        if(button.isPressed()){
           button.updateState(Input.x,Input.y);
-          if(button.isPressed){
+          if(button.isPressed()){
             this.countdown = 2;
-            button.isPressed = false;
+            button.setPressed(false);
           }
         }
         break;

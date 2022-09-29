@@ -1,3 +1,5 @@
+/*
+@Override
 void touchStarted(){
   Input.updateValues(touches[touches.length-1].x, touches[touches.length-1].y, currentInput);
   
@@ -5,7 +7,15 @@ void touchStarted(){
   else currentInput = Input.PRESSED;
   appState.handleInput(currentInput);
 }
+*/
+@Override
+void mousePressed(){
+  float xTouchPoint = mouseX, yTouchPoint = mouseY;
+  Input.updateValues(xTouchPoint, yTouchPoint, currentInput);
+}
 
+/*
+@Override
 void touchMoved(){
   if(!GAME.isOn()){
     currentInput = Input.MOVED;
@@ -13,11 +23,22 @@ void touchMoved(){
     appState.handleInput(currentInput);
   }
 }
+*/
+@Override
+void mouseMoved(){
+  if(!GAME.isOn()){
+    float xTouchPoint = mouseX, yTouchPoint = mouseY;
+    currentInput = Input.MOVED;
+    Input.updateValues(xTouchPoint, yTouchPoint, currentInput);
+    appState.handleInput(currentInput);
+  }
+}
 
+/*
+@Override
 void touchEnded(){
   if(touches.length == 0){
-    /* FIXME - updateValues input típus átállítás előtt
-       következmény: 0-ra default-ol */
+    // FIXME - updateValues input típus átállítás előtt következmény: 0-ra default-ol
     if(GAME.isOn()) currentInput = currentInput == Input.UP_PRESSED ? Input.UP_RELEASED : Input.DOWN_RELEASED;
     else currentInput = Input.RELEASED;
     Input.updateValues(mouseX, mouseY, currentInput);
@@ -33,6 +54,18 @@ void touchEnded(){
     
     appState.handleInput(currentInput);
   }
+}
+*/
+@Override
+void mouseReleased(){
+  /* FIXME - updateValues input típus átállítás előtt
+     következmény: 0-ra default-ol */
+  if(GAME.isOn()) currentInput = currentInput == Input.UP_PRESSED ? Input.UP_RELEASED : Input.DOWN_RELEASED;
+  else currentInput = Input.RELEASED;
+  Input.updateValues(mouseX, mouseY, currentInput);
+    
+  appState.handleInput(currentInput);
+  currentInput = Input.NULL;
 }
 
 static enum Input{

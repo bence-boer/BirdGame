@@ -128,9 +128,9 @@ class GameField{
   }
   
   void initializeSpawners(){
-    CACTUS_SPAWNER = new ObstacleSpawner(new Cactus(Environment.UNIT, cactusDay, cactusNight));
-    TUMBLEWEED_SPAWNER = new ObstacleSpawner(new Tumbleweed(Environment.UNIT, tumbleweedDay, tumbleweedNight));
-    CLOUD_SPAWNER = new ObstacleSpawner(new Cloud(Environment.UNIT, cloudDay, cloudNight));
+    CACTUS_SPAWNER = new ObstacleSpawner(new Cactus(cactusDay, cactusNight));
+    TUMBLEWEED_SPAWNER = new ObstacleSpawner(new Tumbleweed(tumbleweedDay, tumbleweedNight));
+    CLOUD_SPAWNER = new ObstacleSpawner(new Cloud(cloudDay, cloudNight));
     
     obstacleSpawners = new ArrayList<ObstacleSpawner>();
     obstacleSpawners.add(CACTUS_SPAWNER);

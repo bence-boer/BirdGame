@@ -28,7 +28,7 @@ abstract class Obstacle extends Entity{
     this.width = widthIn;
     this.height = heightIn;
     this.xCoordinate = width+widthIn/2;
-    this.yCoordinate = height-field.GROUND_HEIGHT-heightIn/2;
+    this.yCoordinate = height-gameField.GROUND_HEIGHT-heightIn/2;
   }
   
   public void move(float velocityIn){
@@ -60,7 +60,7 @@ abstract class Obstacle extends Entity{
   }
   
   void shadow(FieldState state){
-    float multiplier = map(this.yCoordinate, Environment.HEIGHT/4, Environment.HEIGHT-field.GROUND_HEIGHT, 0.8, 1.2); // XXX: Should be specified in Environment.UNITs
+    float multiplier = map(this.yCoordinate, Environment.HEIGHT/4, Environment.HEIGHT-gameField.GROUND_HEIGHT, 0.8, 1.2); // XXX: Should be specified in Environment.UNITs
     switch (state){
       case DAY:
         fill(#C59F34);
@@ -72,7 +72,7 @@ abstract class Obstacle extends Entity{
         fill(10,10,10,20);
         break;
     }
-    ellipse(this.xCoordinate, Environment.HEIGHT-field.GROUND_HEIGHT, this.width*multiplier, this.width/5*multiplier);
+    ellipse(this.xCoordinate, Environment.HEIGHT-gameField.GROUND_HEIGHT, this.width*multiplier, this.width/5*multiplier);
   }
   
   abstract Obstacle clone();
@@ -164,7 +164,7 @@ class Tumbleweed extends Obstacle{
 
 class Cloud extends Obstacle{
   Cloud(PImage skinDayIn, PImage skinNightIn){
-    super(Environment.UNIT * 1.5, Environment.UNIT * 0.75, this.skinDayIn, this.skinNightIn);
+    super(Environment.UNIT * 1.5, Environment.UNIT * 0.75, skinDayIn, skinNightIn);
     this.yCoordinate -= Environment.UNIT * 0.75;
     this.xVelocity = Environment.UNIT / 40;
   }
@@ -173,7 +173,7 @@ class Cloud extends Obstacle{
   }
   
   void move(float xVelocityIn){
-    this.xCoordinate -= xVelocityIn + this.xVelocityIn;
+    this.xCoordinate -= xVelocityIn + xVelocityIn;
   }
   
   boolean collidesWith(Player player){

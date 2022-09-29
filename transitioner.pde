@@ -5,39 +5,39 @@ class AppStateTransitioner{
   public boolean active;
   
   AppStateTransitioner(){
-    capturedFrame = createImage(width, height, RGB);
-    active = false;
+    this.capturedFrame = createImage((int)Environment.WIDTH, (int)Environment.HEIGHT, RGB);
+    this.active = false;
   }
   
   public void capture(AppState stateToCapture){
     stateToCapture.display();
     
-    capturedFrame.loadPixels();
+    this.capturedFrame.loadPixels();
     loadPixels();
     
-    capturedFrame.pixels = pixels;
-    capturedFrame.updatePixels();
+    this.capturedFrame.pixels = pixels;
+    this.capturedFrame.updatePixels();
   }
   
   public void update(){
-    if(millis() > endpoint) active = false;
+    if(millis() > this.endpoint) this.active = false;
   }
   
   public void display(){
     pushStyle();
     imageMode(CORNER);
-    tint(100, (endpoint-millis())/transitionLength*0.1);
-    image(capturedFrame, 0, 0, width, height);
+    tint(100, (this.endpoint - millis()) / this.transitionLength * 0.1);
+    image(this.capturedFrame, 0, 0, Environment.WIDTH, Environment.HEIGHT);
     popStyle();
   }
   
-  public void transition(float transitionLength){
-    transition(transitionLength, 0);
+  public void transition(float transitionLengthIn){
+    this.transition(transitionLengthIn, 0);
   }
-  public void transition(float transitionLength, float delay){
-    this.transitionLength = transitionLength;
-    startpoint = millis() + (int)(delay*1000);
-    endpoint = startpoint + (int)(transitionLength*1000);
-    active = true;
+  public void transition(float transitionLengthIn, float delay){
+    this.transitionLength = transitionLengthIn;
+    this.startpoint = millis() + (int)(delay*1000);
+    this.endpoint = this.startpoint + (int)(this.transitionLength*1000);
+    this.active = true;
   }
 }
